@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Email Verification - Desi Market</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      text-align: center;
+      max-width: 400px;
+      width: 90%;
+    }
+    .success {
+      color: green;
+      font-weight: bold;
+    }
+    .error {
+      color: red;
+      font-weight: bold;
+    }
+    button {
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+    }
+    button:hover {
+      background: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h2>Email Verification</h2>
+    <p id="message">Verifying your email, please wait...</p>
+    <button id="loginBtn" style="display:none;">Go to Login</button>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-app.js";
+    import { getAuth, applyActionCode } from "https://www.gstatic.com/firebasejs/10.14.0/firebase-auth.js";
+
+    // ✅ Your Firebase config
+    const firebaseConfig = {
+      apiKey: "AIzaSyDB8F7l0eIIt6NyZoDKtMI6EvOAEDP18rc",
+      authDomain: "desi-market-85cc8.firebaseapp.com",
+      databaseURL: "https://desi-market-85cc8-default-rtdb.firebaseio.com",
+      projectId: "desi-market-85cc8",
+      storageBucket: "desi-market-85cc8.firebasestorage.app",
+      messagingSenderId: "707912806399",
+      appId: "1:707912806399:web:088a4453c3fda7d527c1ca",
+      measurementId: "G-XVBBG830NR"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    // ✅ Grab verification code from URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const oobCode = urlParams.get('oobCode');
+
+    if (oobCode) {
+      applyActionCode(auth, oobCode)
+        .then(() => {
+          document.getElementById("message").innerHTML = "✅ Your email has been verified successfully!";
+          document.getElementById("message").className = "success";
+          document.getElementById("loginBtn").style.display = "inline-block";
+        })
+        .catch((error) => {
+          document.getElementById("message").innerHTML = "❌ Verification failed: " + error.message;
+          document.getElementById("message").className = "error";
+        });
+    } else {
+      document.getElementById("message").innerHTML = "❌ Invalid verification link.";
+      document.getElementById("message").className = "error";
+    }
+
+    // ✅ Redirect to login page
+    document.getElementById("loginBtn").addEventListener("click", () => {
+      window.location.href = "public/after-verify.html"; // change to your login page
+    });
+  </script>
+</body>
+</html>
