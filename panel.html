@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>YappCloud Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="panel.css" />
+</head>
+<body>
+  <header class="navbar">
+    <div class="logo">YappCloud</div>
+    <nav>
+      <a href="#">Dashboard</a>
+      <a href="#">Services</a>
+      <a href="#">Status</a>
+      <a href="#">Support</a>
+    </nav>
+    <button id="logout">Logout</button>
+  </header>
+
+  <main class="dashboard">
+    <section class="welcome">
+      <h1>Welcome back, <span id="user-email">loading...</span></h1>
+      <p class="subtitle">Here is your current hosting status:</p>
+    </section>
+
+    <section class="hosting-card" id="hosting-card">
+      <p>Checking hosting...</p>
+    </section>
+  </main>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-app.js";
+    import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/9.23.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDB8F7l0eIIt6NyZoDKtMI6EvOAEDP18rc",
+      authDomain: "desi-market-85cc8.firebaseapp.com",
+      projectId: "desi-market-85cc8",
+      appId: "1:707912806399:web:088a4453c3fda7d527c1ca"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const emailEl = document.getElementById("user-email");
+    const hostingCard = document.getElementById("hosting-card");
+
+    let currentUserEmail = "";
+
+    onAuthStateChanged(auth, async (user) => {
+      if (!user) {
+        window.location.href = "log.html";
+        return;
+      }
+
+      currentUserEmail = user.email;
+      emailEl.textContent = currentUserEmail;
+
+      try {
+        const res = await fetch("hosting.json");
+        if (!res.ok) throw new Error("Hosting file not found");
+        const data = await res.json();
+        const entry = data.find(e => e.email.toLowerCase() === currentUserEmail.toLowerCase());
+
+        if (entry) {
+          const emailFilename = currentUserEmail.replace(/[@.]/g, '_'); // replace @ and . to make it filename-safe
+          hostingCard.innerHTML = `
+            <div class="card">
+              <h2>${entry.server}</h2>
+              <p><strong>Status:</strong> <span class="${entry.status.toLowerCase()}">${entry.status}</span></p>
+              <p><strong>Due:</strong> ${entry.due}</p>
+              <button class="manage-btn" onclick="manageServer('${emailFilename}')">Manage Server</button>
+            </div>
+          `;
+        } else {
+          hostingCard.innerHTML = `
+            <div class="card empty">
+              <h2>No Hosting Found</h2>
+              <p>You don't currently have any hosting services.</p>
+            </div>
+          `;
+        }
+      } catch (err) {
+        hostingCard.innerHTML = `<div class="card error">Error loading hosting info.</div>`;
+        console.error("FETCH ERROR:", err);
+      }
+    });
+
+    document.getElementById("logout").addEventListener("click", async () => {
+      await signOut(auth);
+      window.location.href = "log.html";
+    });
+
+    window.manageServer = function(emailFilename) {
+      // Redirect to user-specific dashboard
+      window.location.href = `servers/${emailFilename}.html`;
+    };
+  </script>
+</body>
+</html>

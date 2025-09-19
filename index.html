@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CareerLinker</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Top Banner -->
+  <div class="top-banner">
+    <p>Finding a job is getting harder — we make it easier.  <a href="#">Read more</a></p>
+  </div>
+
+  <!-- Navbar -->
+  <header class="navbar">
+    <div class="logo">CareerLinker</div>
+    <nav>
+    </nav>
+<div class="nav-actions">
+  
+  <a href="log.html" class="btn btn-outline">Log in</a>
+  <a href="register.html" class="btn btn-primary">Get started – it’s free!</a>
+
+</div>
+
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>The search is hard the solution is here.</h1>
+      <p>marter hiring connections — no middlemen, no wasted hours, no hassle.</p>
+      <div class="hero-buttons">
+        <button class="btn-dark">Start your search →</button>
+       <a href="register.html" class="btn btn-outline">Press for a Suprise</a>
+      </div>
+    </div>
+   <div class="hero-image">
+  <img id="slideshow" src="img/careerlinker1.png" alt="CareerLinker Preview">
+</div>
+
+<script>
+  const images = [
+    "img/careerlinker1.png",
+    "img/careerlinker2.png"
+  ];
+
+  let index = 0;
+  const slideshow = document.getElementById("slideshow");
+
+  setInterval(() => {
+    slideshow.style.opacity = 0;
+    setTimeout(() => {
+      index = (index + 1) % images.length;
+      slideshow.src = images[index];
+      slideshow.style.opacity = 1;
+    }, 500); // match transition duration
+  }, 10000); // 3s between slides (adjust as you like)
+</script>
+
+<style>
+  #slideshow {
+    transition: opacity 0.5s ease-in-out; /* smooth fade */
+  }
+</style>
+
+</body>
+</html>

@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Verify Your Email</title>
+  <link rel="stylesheet" href="register.css" />
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: linear-gradient(to bottom right, #ffffff, #f4f4f4);
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+    }
+
+    .verify-container {
+      background: #fff;
+      border: 1px solid #ddd;
+      padding: 40px 30px;
+      border-radius: 20px;
+      max-width: 400px;
+      text-align: center;
+      color: #333;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .logo {
+      width: 80px;
+      margin: 0 auto 15px auto;
+      display: block;
+    }
+
+    .logo-text {
+      font-weight: bold;
+      font-size: 2.2rem;
+      letter-spacing: 2px;
+      margin-bottom: 25px;
+      color: #111;
+    }
+
+    h2 {
+      margin-bottom: 15px;
+      color: #111;
+    }
+
+    p {
+      margin: 10px 0;
+      font-size: 1rem;
+      color: #555;
+    }
+
+    .email-mask {
+      font-weight: bold;
+      color: #005eff;
+      word-break: break-word;
+      margin: 10px 0;
+    }
+
+    .links {
+      margin-top: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .links a {
+      color: #005eff;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+    }
+
+    .links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="verify-container">
+    <img src="img/logo.png" alt="YappCloud Logo" class="logo" />
+    <div class="logo-text">CareerLinker</div>
+
+    <h2>Verify Your Email</h2>
+    <p>We've sent a verification email to:</p>
+    <p class="email-mask" id="masked-email"></p>
+    <p>Please check your inbox and click the link to activate your account.</p>
+
+    <div class="links">
+      <a href="log.html">Already verified? Log in</a>
+      <a href="register.html">Back to Register</a>
+    </div>
+  </div>
+
+  <script>
+    // Mask email for display
+    function maskEmail(email) {
+      if (!email) return "";
+      const [local, domain] = email.split("@");
+      const half = Math.floor(local.length / 2);
+      const maskedLocal = local.slice(0, half) + "****";
+      return maskedLocal + "@" + domain;
+    }
+
+    // Get query param
+    function getQueryParam(param) {
+      const params = new URLSearchParams(window.location.search);
+      return params.get(param);
+    }
+
+    const email = getQueryParam("email");
+    const masked = maskEmail(email);
+    document.getElementById("masked-email").textContent = masked || "your email";
+  </script>
+</body>
+</html>
